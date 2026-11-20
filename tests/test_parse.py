@@ -79,8 +79,30 @@ def test_search_finds_a_hack_in_the_platform_hack_folder():
     assert rows[0]["source_id"].endswith(".7z")
 
 
-def test_search_does_not_return_retail_files():
-    assert mod.Search(_Ctx()).search("Mario", "n64", 25) == []
+def test_scope_all_returns_retail_and_hacks():
+    ctx = _Ctx()
+    assert mod.Search(ctx).search("Super Mario 64", "n64", 25)
+    ctx.config["include"] = "retail"
+    titles = [r["title"] for r in mod.Search(ctx).search("Super Mario 64", "n64", 25)]
+    assert titles and all("Chex" not in t for t in titles)
+
+
+def test_scope_hacks_excludes_retail():
+    ctx = _Ctx()
+    ctx.config["include"] = "hacks"
+    titles = [r["title"] for r in mod.Search(ctx).search("Super Mario 64", "n64", 25)]
+    assert titles == []
+
+
+def test_scope_retail_excludes_hacks():
+    ctx = _Ctx()
+    ctx.config["include"] = "retail"
+    assert mod.Search(ctx).search("Chex", "n64", 25) == []
+
+
+def test_scope_all_includes_a_retail_file():
+    titles = [r["title"] for r in mod.Search(_Ctx()).search("Mario", "n64", 25)]
+    assert titles == ["Super Mario 64 (USA).z64"]
 
 
 def test_an_unconfigured_platform_returns_nothing():

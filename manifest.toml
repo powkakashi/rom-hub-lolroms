@@ -18,3 +18,5 @@ romm_api = []
 # section. Verified against the live site 2026-11-20; add another pair for a new platform.
 systems = { type = "str", default = "gb=Nintendo/Game Boy|Pokéhacks/Game Boy,gbc=Nintendo/Game Boy Color|Pokéhacks/Game Boy Color,gba=Nintendo/Game Boy Advance|Pokéhacks/Game Boy Advance,nds=Nintendo/DS,n64=Nintendo/Nintendo 64,snes=Nintendo/Super Famicom,nes=Nintendo/Nintendo Entertainment System" }
 max_rows = { type = "int", default = 25 }
+# What a search may return: `all` (retail + hacks, for ROMarr), `retail` only, or `hacks` only.
+include = { type = "str", default = "all" }

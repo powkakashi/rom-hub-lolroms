@@ -80,11 +80,13 @@ class Search(SearchProvider):
         if not sections or not query.strip():
             return []
         want = query.lower()
+        scope = str(self.ctx.config.get("include") or "all").strip().lower()
         rows: list[SearchResult] = []
         seen: set[str] = set()
         for section in sections:
             for path in self._listing(section):
-                if path in seen or not is_hack(path):
+                hack = is_hack(path)
+                if path in seen or (scope == "hacks" and not hack) or (scope == "retail" and hack):
                     continue
                 seen.add(path)
                 filename = decoded(path.rsplit("/", 1)[-1])
